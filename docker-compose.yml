@@ -7,6 +7,8 @@ services:
     networks:
     app_net:
       ipv4_address: '172.16.10.12'
+    environment:
+      - "MYSQL_ROOT_PASSWORD=password"
     volumes:
       - ./data:/var/lib/mysql
       - ./init:/docker-entrypoint-initdb.d/
@@ -25,7 +27,7 @@ services:
         - DB_HOST=172.16.10.12
         - DB_PORT=3306
         - DB_USER=jumpserver
-        - DB_PASSWORD=sjj123@
+        - DB_PASSWORD=你数据库授权用户的密码
         - DB_NAME=jumpserver
       networks:
         app_net:
