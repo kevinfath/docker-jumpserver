@@ -1,0 +1,43 @@
+version: '3'
+services:
+  db:
+    image: 'mysql/mysql-server:5.7'
+    restart: 'always'
+    container_name: mysql
+    networks:
+    app_net:
+      ipv4_address: '172.16.10.12'
+    volumes:
+      - ./data:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d/
+    ports:
+      - '4396:3306'
+  jump:
+      image: 'wojiushixiaobai/jumpserver:1.4.2'
+      restart: 'always'
+      container_name: 'jumpserver'
+      volumes:
+      #备份日志和录像
+        - ./data-jumpserver:/opt/jumpserver/data/
+        - ./logs:/opt/jumpserver/logsa/
+      environment:
+        - DB_ENGINE=mysql
+        - DB_HOST=172.16.10.12
+        - DB_PORT=3306
+        - DB_USER=jumpserver
+        - DB_PASSWORD=sjj123@
+        - DB_NAME=jumpserver
+      networks:
+        app_net:
+        ipv4_address: '172.16.10.13'
+      ports:
+        - '8080:80'
+
+networks:
+  app_net:
+    driver: 'bridge'
+    ipam:
+      driver: 'default'
+      config:
+      -
+        subnet: 172.16.10.0/24
